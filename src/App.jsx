@@ -3,6 +3,79 @@ import React, { useMemo, useState } from 'react';
 function App() {
   const basePrice = 20;
 
+  const tops = [
+    {
+      id: 'teen-basic',
+      name: 'Teen Basic Top',
+      priceFrom: basePrice,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/short-cap.jpg', '/sleeves/Bishop.jpg', '/sleeves/flutter.jpg'],
+    },
+    {
+      id: 'soft-hoodie',
+      name: 'Soft Hoodie Top',
+      priceFrom: 32,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/Bishop.jpg', '/sleeves/flutter.jpg'],
+    },
+    {
+      id: 'everyday-crew',
+      name: 'Everyday Crew Top',
+      priceFrom: 24,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/short-cap.jpg', '/sleeves/classic-puff.jpg'],
+    },
+    {
+      id: 'weekend-tee',
+      name: 'Weekend Tee',
+      priceFrom: 22,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/short-cap.jpg'],
+    },
+    {
+      id: 'layering-top',
+      name: 'Layering Top',
+      priceFrom: 26,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/strap.jpg', '/sleeves/flutter.jpg'],
+    },
+    {
+      id: 'studio-top',
+      name: 'Studio Top',
+      priceFrom: 28,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/Bishop.jpg'],
+    },
+    {
+      id: 'city-shirt',
+      name: 'City Shirt',
+      priceFrom: 30,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/classic-puff.jpg'],
+    },
+    {
+      id: 'chill-top',
+      name: 'Chill Top',
+      priceFrom: 21,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/short-cap.jpg', '/sleeves/strap.jpg'],
+    },
+    {
+      id: 'campus-top',
+      name: 'Campus Top',
+      priceFrom: 25,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/flutter.jpg'],
+    },
+    {
+      id: 'night-out-top',
+      name: 'Night Out Top',
+      priceFrom: 34,
+      image: '/top/BlueFlow.jpg',
+      variationImages: ['/sleeves/strap.jpg', '/sleeves/Bishop.jpg'],
+    },
+  ];
+
   const fabrics = [
     { id: 'cotton-solid', name: 'Cotton Solid', description: 'Breathable everyday fabric', priceDelta: 0 },
     { id: 'cotton-striped', name: 'Cotton Striped', description: 'Playful stripe pattern', priceDelta: 3 },
@@ -73,6 +146,7 @@ function App() {
   const [quantity, setQuantity] = useState(1);
   const [expandedSection, setExpandedSection] = useState('size');
   const [showBreakdown, setShowBreakdown] = useState(false);
+  const [activeTopId, setActiveTopId] = useState(null);
 
   const fabric = fabrics.find((f) => f.id === selectedFabric);
   const sleeve = sleeves.find((s) => s.id === selectedSleeve);
@@ -106,112 +180,157 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b bg-white/80 backdrop-blur sticky top-0 z-10">
+      <header className="border-b bg-primary text-white sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white font-semibold">W</span>
-            <span className="font-semibold tracking-tight">WeaveWear</span>
+          <div className="flex items-center gap-2.5">
+            <img
+              src="/logo-uniqfit.png"
+              alt="UniqFit logo"
+              className="h-8 w-8 rounded-md object-contain bg-white/90 p-1"
+            />
+            <span className="font-semibold tracking-tight">UniqFit</span>
           </div>
-          <nav className="hidden md:flex gap-6 text-sm text-slate-600">
-            <button className="hover:text-primary">Tops</button>
-            <button className="hover:text-primary">How It Works</button>
-            <button className="hover:text-primary">About</button>
+          <nav className="hidden md:flex gap-6 text-sm text-white/80">
+            <button className="hover:text-white">Tops</button>
+            <button className="hover:text-white">How It Works</button>
+            <button className="hover:text-white">About</button>
           </nav>
           <button className="relative inline-flex items-center gap-2 text-sm font-medium">
             <span>Cart</span>
-            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-white">0</span>
+            <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-primary text-[10px]">0</span>
           </button>
         </div>
       </header>
 
       <main className="flex-1 bg-slate-50/60">
-        <section className="max-w-6xl mx-auto px-4 py-8 md:py-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-3">Custom teen top builder</p>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">Pick your Size, Fabric, Sleeves &amp; More</h1>
-          <p className="text-sm text-slate-600 max-w-2xl">
-            Start from one base top and tap through simple choices. Every pick updates the preview and your price.
-          </p>
-        </section>
+        {!activeTopId ? (
+          <section className="max-w-6xl mx-auto px-3 py-6 md:py-8">
+            <div className="mb-4 md:mb-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-3">Teen tops</p>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">Pick a top to customize</h1>
+              <p className="text-sm text-slate-600 max-w-2xl">
+                Browse base tops for everyday, weekend and going-out looks. Tap any card to open a builder where you can change fabric,
+                sleeves, neck, fit and length.
+              </p>
+              <p className="mt-1.5 text-[11px] text-slate-500">
+                Every top on this page is customizable &mdash; the small sleeve pictures under each card show just a few of the options.
+              </p>
+            </div>
 
-        <section className="max-w-6xl mx-auto px-4 pb-10 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-          <div className="space-y-6">
-            <div className="rounded-3xl bg-white border border-slate-200 shadow-sm p-4 md:p-5 flex flex-col gap-4">
-              <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="md:w-1/2 flex flex-col gap-3 sticky top-24 self-start">
-                  <div className="flex flex-wrap gap-2 text-[11px]">
-                    {[
-                      { id: 'size', label: 'Size' },
-                      { id: 'fabric', label: 'Fabric' },
-                      { id: 'sleeves', label: 'Sleeves' },
-                      { id: 'neck', label: 'Neck' },
-                      { id: 'fit', label: 'Fit' },
-                      { id: 'length', label: 'Length' },
-                    ].map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => setExpandedSection(item.id)}
-                        className={`rounded-full border px-3 py-1.5 font-medium transition ${
-                          expandedSection === item.id
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-slate-200 bg-white text-slate-700 hover:border-primary/50'
-                        }`}
-                      >
-                        Pick {item.label}
-                      </button>
-                    ))}
+            <div className="grid gap-4 md:gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {tops.map((top) => (
+                <button
+                  key={top.id}
+                  type="button"
+                  onClick={() => setActiveTopId(top.id)}
+                  className="group rounded-3xl bg-white border border-slate-200 shadow-sm overflow-hidden text-left flex flex-col hover:border-primary/60 hover:shadow-md transition"
+                >
+                  <div className="h-36 md:h-40 bg-slate-50 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={top.image}
+                      alt={top.name}
+                      className="max-h-full w-auto object-contain group-hover:scale-[1.03] transition-transform"
+                    />
                   </div>
-
-                  <div className="relative w-full max-w-xs mx-auto">
-                    <div className="aspect-[3/4] rounded-3xl bg-gradient-to-br from-primary/5 via-white to-accent/10 border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden">
-                      <img
-                        src={sleeve?.imageUrl || '/top/BlueFlow.jpg'}
-                        alt="Teen Basic Top preview"
-                        className="h-full w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="md:w-1/2 space-y-4 text-sm">
-                  <div>
-                    <h2 className="text-base md:text-lg font-semibold tracking-tight mb-1">Teen Basic Top</h2>
-                    <p className="text-xs text-slate-500">From {formatPrice(basePrice)}</p>
-                    <p className="mt-2 text-xs text-slate-600">
-                      Pick a size, fabric, sleeve, neck, fit and length. Your choices keep this top teen-friendly and unique.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 md:p-3.5 space-y-1.5 text-[11px]">
                     <div>
-                      <p className="text-[11px] font-medium text-slate-500 mb-1">Quantity</p>
-                      <div className="inline-flex items-center rounded-full border border-slate-200 bg-white overflow-hidden">
-                        <button
-                          type="button"
-                          onClick={() => handleQuantityChange(-1)}
-                          className="h-8 w-8 flex items-center justify-center text-slate-600 hover:bg-slate-50"
-                        >
-                          −
-                        </button>
-                        <span className="w-10 text-center text-xs font-medium">{quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleQuantityChange(1)}
-                          className="h-8 w-8 flex items-center justify-center text-slate-600 hover:bg-slate-50"
-                        >
-                          +
-                        </button>
+                      <p className="text-[13px] font-semibold text-slate-900 leading-snug">{top.name}</p>
+                      <p className="text-[11px] text-slate-500">From {formatPrice(top.priceFrom)}</p>
+                    </div>
+                    <div className="flex items-center mt-1.5">
+                      <div className="flex items-center gap-2.5">
+                        {top.variationImages.map((src, index) => (
+                          <span
+                            key={src}
+                            className="h-12 w-12 rounded-full border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center"
+                          >
+                            <img
+                              src={src}
+                              alt="Top variation"
+                              className="h-full w-full object-cover"
+                            />
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </div>
-                  <div className="text-xs text-slate-500 mt-2">
-                    <p>
-                      Size: <span className="font-medium text-slate-700">{size}</span>
-                    </p>
+                </button>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <>
+            <section className="max-w-6xl mx-auto px-4 py-8 md:py-10">
+              <button
+                type="button"
+                onClick={() => setActiveTopId(null)}
+                className="mb-3 inline-flex items-center gap-1 text-xs text-slate-500 hover:text-primary"
+              >
+                <span className="text-base leading-none">←</span>
+                <span>Back to all tops</span>
+              </button>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-3">Custom teen top builder</p>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">Pick your Size, Fabric, Sleeves &amp; More</h1>
+              <p className="text-sm text-slate-600 max-w-2xl">
+                Start from one base top and tap through simple choices. Every pick updates the preview and your price.
+              </p>
+            </section>
+
+            <section className="max-w-6xl mx-auto px-4 pb-10 grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+              <div className="space-y-6">
+                <div className="rounded-3xl bg-white border border-slate-200 shadow-sm p-4 md:p-5 flex flex-col gap-4">
+                  <div className="flex flex-col md:flex-row gap-6 items-start">
+                    <div className="md:w-1/2 flex flex-col gap-3 sticky top-24 self-start">
+                      <div className="relative w-full max-w-xs mx-auto">
+                        <div className="aspect-[3/4] rounded-3xl bg-gradient-to-br from-primary/5 via-white to-accent/10 border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden">
+                          <img
+                            src={sleeve?.imageUrl || '/top/BlueFlow.jpg'}
+                            alt="Teen Basic Top preview"
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="md:w-1/2 space-y-4 text-sm">
+                      <div>
+                        <h2 className="text-base md:text-lg font-semibold tracking-tight mb-1">Teen Basic Top</h2>
+                        <p className="text-xs text-slate-500">From {formatPrice(basePrice)}</p>
+                        <p className="mt-2 text-xs text-slate-600">
+                          Pick a size, fabric, sleeve, neck, fit and length. Your choices keep this top teen-friendly and unique.
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="text-[11px] font-medium text-slate-500 mb-1">Quantity</p>
+                          <div className="inline-flex items-center rounded-full border border-slate-200 bg-white overflow-hidden">
+                            <button
+                              type="button"
+                              onClick={() => handleQuantityChange(-1)}
+                              className="h-8 w-8 flex items-center justify-center text-slate-600 hover:bg-slate-50"
+                            >
+                              −
+                            </button>
+                            <span className="w-10 text-center text-xs font-medium">{quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleQuantityChange(1)}
+                              className="h-8 w-8 flex items-center justify-center text-slate-600 hover:bg-slate-50"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-xs text-slate-500 mt-2">
+                        <p>
+                          Size: <span className="font-medium text-slate-700">{size}</span>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
             <div className="rounded-3xl bg-white border border-slate-200 shadow-sm p-4 md:p-5 text-sm">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary mb-2">Your top</p>
@@ -271,6 +390,7 @@ function App() {
                 Later, you can connect this builder to a cart, checkout, and real payment.
               </p>
             </div>
+
           </div>
 
           <aside className="space-y-4">
@@ -283,7 +403,7 @@ function App() {
                 setExpandedSection={setExpandedSection}
               >
                 <div className="flex flex-wrap gap-1.5 text-xs">
-                  {['XS', 'S', 'M', 'L', 'XL'].map((option) => (
+                  {['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((option) => (
                     <button
                       key={option}
                       type="button"
@@ -297,47 +417,6 @@ function App() {
                       {option}
                     </button>
                   ))}
-                </div>
-              </AccordionSection>
-
-              <AccordionSection
-                id="fabric"
-                title="Pick your fabric"
-                description="Choose the base fabric and pattern."
-                expandedSection={expandedSection}
-                setExpandedSection={setExpandedSection}
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {fabrics.map((option) => {
-                    const selected = selectedFabric === option.id;
-                    return (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => setSelectedFabric(option.id)}
-                        className={`flex items-center gap-3 rounded-2xl border p-3 text-left text-xs transition ${
-                          selected
-                            ? 'border-primary bg-primary/5 shadow-sm'
-                            : 'border-slate-200 bg-white hover:border-primary/50'
-                        }`}
-                      >
-                        <span
-                          className={`h-10 w-10 rounded-xl border shadow-inner ${
-                            option.id === 'cotton-striped'
-                              ? 'bg-[linear-gradient(135deg,#f97316_0,#f97316_20%,#facc15_20%,#facc15_40%,#22c55e_40%,#22c55e_60%,#3b82f6_60%,#3b82f6_80%,#a855f7_80%,#a855f7_100%)]'
-                              : 'bg-slate-100'
-                          }`}
-                        />
-                        <div className="flex-1">
-                          <p className="font-medium text-slate-800">{option.name}</p>
-                          <p className="text-slate-500 line-clamp-2">{option.description}</p>
-                        </div>
-                        <span className="text-[11px] font-medium text-slate-700">
-                          {option.priceDelta ? `+ $${option.priceDelta}` : 'Included'}
-                        </span>
-                      </button>
-                    );
-                  })}
                 </div>
               </AccordionSection>
 
@@ -436,11 +515,13 @@ function App() {
             </div>
           </aside>
         </section>
+          </>
+        )}
       </main>
 
       <footer className="border-t bg-white">
         <div className="max-w-6xl mx-auto px-4 py-4 text-xs text-slate-500 flex justify-between">
-          <span>© {new Date().getFullYear()} WeaveWear</span>
+          <span>© {new Date().getFullYear()} UniqFit</span>
           <span>Customizable teen tops demo</span>
         </div>
       </footer>

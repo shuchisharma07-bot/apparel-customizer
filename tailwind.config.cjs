@@ -3,7 +3,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#5C3BF6',
+        // Rusty primary for UniqFit
+        primary: '#B45309',
         accent: '#FF6B6B',
       },
     },
